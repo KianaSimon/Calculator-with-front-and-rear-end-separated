@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>网页计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #calculator {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+        }
+
+        #calculator h1 {
+            font-size: 24px;
+        }
+
+        #calculator input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 18px;
+        }
+
+        #calculator button {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        #calculator button:hover {
+            background-color: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <h1>calculator</h1>
+        <input type="text" id="text-input">
+        <div>
+            <button onclick="appendToDisplay('pi')">pi</button>
+            <button onclick="appendToDisplay('e')">e</button>
+            <button onclick="appendToDisplay('%')">%</button>
+            <button onclick="deleteCharacter()">X</button>
+            <button onclick="clearDisplay()">C</button>
+        </div>
+        <div>
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">)</button>
+            <button onclick="appendToDisplay('ln')">ln</button>
+            <button onclick="appendToDisplay('lg')">lg</button>
+            <button onclick="appendToDisplay('^')">^</button>
+        </div>
+        <div>
+            <button onclick="appendToDisplay('cos')">cos</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('+')">+</button>
+        </div>
+        <div>
+            <button onclick="appendToDisplay('sin')">sin</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('-')">-</button>
+        </div>
+        <div>
+            <button onclick="appendToDisplay('tan')">tan</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('*')">*</button>
+        </div>
+        <div>
+            <button onclick="appendToDisplay('sqrt')">sqrt</button>
+            <button onclick="appendToDisplay('Ans')">Ans</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+<script>
+        function appendToDisplay(value) {
+            document.getElementById('text-input').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('text-input').value = '';
+        }
+        function deleteCharacter() {
+            document.getElementById('text-input').value =document.getElementById('text-input').value.slice(0,-1);
+        }
+
+        function calculateResult() {
+            const textInput = document.getElementById('text-input').value;
+
+            fetch('/process-text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: textInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('text-input').value=data.result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
